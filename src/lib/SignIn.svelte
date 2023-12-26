@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { focusTrap } from "@skeletonlabs/skeleton";
-    let isFocused: boolean = true;
+    let isFocused = true;
 
     import { signInAnonymously, signInWithEmailAndPassword } from "firebase/auth";
     import { getFirebaseContext } from 'sveltefire';
