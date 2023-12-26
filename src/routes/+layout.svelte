@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import TextAreaFormField from '$lib/Form/TextAreaFormField.svelte';
 	import AddForm from '$lib/Form/AddForm.svelte';
 	import FormField from '$lib/Form/FormField.svelte';
@@ -60,18 +60,25 @@
 	let app = initializeApp(firebaseConfig);
 	let firestore = getFirestore(app);
 	let auth = getAuth(app);
-	// const { auth, firestore } = getFirebaseContext();
+
+	import TipTap from '$lib/TipTap.svelte';
+
+	let divElement: HTMLDivElement;
+	$: console.log(divElement);
 </script>
 
 <FirebaseApp {auth} {firestore}>
 	<Drawer position="left">
 		{#if $drawerStore.id === 'create blog'}
-			<form on:submit|preventDefault={() => {postBlog(firestore, title, author, image, text); drawerStore.close();}} class="p-8 px-16 ">
+			<form on:submit|preventDefault={() => {postBlog(firestore, title, author, image, divElement); drawerStore.close();}} class="p-8 px-16 w-full">
 				<AddForm>
 					<FormField bind:value={title} name="Title" classValue="sm:col-span-3" />
 					<FormField bind:value={author} name="Author" classValue="sm:col-span-4 col-start-1" />
 					<FormField bind:value={image} name="Image" classValue="sm:col-span-3" />
 					<TextAreaFormField bind:value={text} name="About" classValue="col-span-full" />
+					<fieldset class="col-span-full">
+						<TipTap bind:element={divElement} />
+					</fieldset>
 				</AddForm>
 			</form>
 		{/if}
@@ -85,6 +92,8 @@
 				</div>
 				<div class="w-full">
 					<slot />
+					<div class="prose text-white" bind:this={divElement} />
+
 				</div>
 			</div>
 		</SignedIn>

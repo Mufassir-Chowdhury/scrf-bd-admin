@@ -13,7 +13,7 @@ export async function deleteBlog(firestore: Firestore, title: string) {
         console.error("Error deleting document: ", e);
     }
 }
-export async function postBlog(firestore: Firestore, title: string, author: string, image: string, text: string) {    
+export async function postBlog(firestore: Firestore, title: string, author: string, image: string, text: HTMLDivElement) {    
     try {
         if (firestore) {
             console.log(firestore);
@@ -24,7 +24,7 @@ export async function postBlog(firestore: Firestore, title: string, author: stri
                 title: title,
                 author: author,
                 image: image,
-                content: text,
+                content: text.outerHTML.replace("contenteditable=\"true\"", "contenteditable=\"false\""),
                 slug: slugify(title),
                 date: new Date().toLocaleDateString()
             });

@@ -3,11 +3,10 @@
 	import { Collection, getFirebaseContext } from 'sveltefire';
     
     import { getDrawerStore } from "@skeletonlabs/skeleton";
-    import type { DrawerSettings } from '@skeletonlabs/skeleton';
 
     const drawerStore = getDrawerStore();
 
-    const settings: DrawerSettings = { id: 'create blog' };
+    const settings = { id: 'create blog' };
 
     function openDrawer() {
         console.log("Opening drawer");
@@ -15,6 +14,7 @@
     }
 
     const { firestore } = getFirebaseContext();
+    
 </script>
     
 
@@ -41,6 +41,9 @@
                         {blog.author} |
                         {blog.date}
                     </subtitle>
+                    <div class="prose text-white" >
+                        {@html blog.content}
+                    </div>
                 </div>
                 <div>
                     <button class="btn btn-primary"><i class="fi fi-tr-file-edit"></i></button>
@@ -55,5 +58,6 @@
         <p slot="loading">Loading...</p>
     </Collection>
 </div>
+
 
 
