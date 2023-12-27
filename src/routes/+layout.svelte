@@ -75,8 +75,7 @@
 					<FormField bind:value={title} name="Title" classValue="sm:col-span-3" />
 					<FormField bind:value={author} name="Author" classValue="sm:col-span-4 col-start-1" />
 					<FormField bind:value={image} name="Image" classValue="sm:col-span-3" />
-					<TextAreaFormField bind:value={text} name="About" classValue="col-span-full" />
-					<fieldset class="col-span-full">
+					<fieldset class="sm:col-span-6 ">
 						<TipTap bind:element={divElement} />
 					</fieldset>
 				</AddForm>
