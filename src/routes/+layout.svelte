@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TextAreaFormField from '$lib/Form/TextAreaFormField.svelte';
+	import PhotoPicker from '$lib/Form/PhotoPicker.svelte';
 	import AddForm from '$lib/Form/AddForm.svelte';
 	import FormField from '$lib/Form/FormField.svelte';
 
@@ -42,11 +42,9 @@
 	import { getFirestore } from 'firebase/firestore';
 	import { getAuth } from 'firebase/auth';
 
-
 	let title = '';
 	let author = '';
 	let image = '';
-	let text = '';
 	const firebaseConfig = {
 		apiKey: "AIzaSyAw9-SSj6Pnu1P5pvq6GnukOX_1vC7EdfQ",
 		authDomain: 'scrf-bd.firebaseapp.com',
@@ -60,23 +58,29 @@
 	let app = initializeApp(firebaseConfig);
 	let firestore = getFirestore(app);
 	let auth = getAuth(app);
+	let storage = getStorage(app);
+	let rtdb = getDatabase(app);
 
 	import TipTap from '$lib/TipTap.svelte';
+	import { getStorage } from 'firebase/storage';
+	import { getDatabase } from 'firebase/database';
 
 	let divElement: HTMLDivElement;
-	$: console.log(divElement);
 </script>
 
-<FirebaseApp {auth} {firestore}>
+<FirebaseApp {auth} {firestore} {storage} {rtdb}>
 	<Drawer position="left">
 		{#if $drawerStore.id === 'create blog'}
-			<form on:submit|preventDefault={() => {postBlog(firestore, title, author, image, divElement); drawerStore.close();}} class="p-8 px-16 w-full">
+			<form on:submit|preventDefault={() => {postBlog(firestore, title, author, image, divElement); drawerStore.close(); title = ''; author = ''; image='';}} class="p-8 px-16 w-full">
 				<AddForm>
 					<FormField bind:value={title} name="Title" classValue="sm:col-span-3" />
 					<FormField bind:value={author} name="Author" classValue="sm:col-span-4 col-start-1" />
-					<FormField bind:value={image} name="Image" classValue="sm:col-span-3" />
+					<FormField bind:value={image} disabled={true}  name="Image" classValue="sm:col-span-3" />
+					<p class="text-green-600 sm:col-span-6">The link will be added after you upload your image</p>
+					<PhotoPicker bind:title bind:image/>
+					<p class="text-red-600 sm:col-span-6">Only upload photo after providing the final version of your title</p>
 					<fieldset class="sm:col-span-6 ">
-						<TipTap bind:element={divElement} />
+						<TipTap bind:title bind:element={divElement} />
 					</fieldset>
 				</AddForm>
 			</form>

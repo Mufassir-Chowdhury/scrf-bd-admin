@@ -36,6 +36,6 @@ export async function postBlog(firestore: Firestore, title: string, author: stri
         console.error('Error adding document: ', e);
     }
 }
-function slugify(text: string) {
+export function slugify(text: string) {
     return text.toLowerCase().replace(/[^a-z]+/g, '-');
 }

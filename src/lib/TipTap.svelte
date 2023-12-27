@@ -6,8 +6,11 @@
   import Image from '@tiptap/extension-image';
   import Link from '@tiptap/extension-link';
 
+  export let title: string;
   export let element: HTMLDivElement;
   let editor: Editor;
+
+  
 
   onMount(() => {
     editor = new Editor({
