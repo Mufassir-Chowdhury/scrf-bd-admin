@@ -43,6 +43,7 @@
 
     {#if snapshot?.state === "success"}
       <DownloadURL ref={snapshot?.ref} let:link>
+        <!-- {image = link} -->
         <button type="button" on:click={() => image = link}>Upload</button>
       </DownloadURL>
     {/if}

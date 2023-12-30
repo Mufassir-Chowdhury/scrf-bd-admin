@@ -1,10 +1,8 @@
-import { doc, deleteDoc, setDoc, Firestore } from 'firebase/firestore';
-import { DateTime } from "luxon";
-import { Timestamp } from "@firebase/firestore";
 import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+import { doc, deleteDoc, setDoc, Firestore, Timestamp } from 'firebase/firestore';
+import { DateTime } from 'luxon';
 
 export async function deleteBlog(firestore: Firestore, title: string) {
-			
     const modalStore = getModalStore();
 
     const modal: ModalSettings = {
@@ -17,8 +15,7 @@ export async function deleteBlog(firestore: Firestore, title: string) {
             if (r) {
                 try {
                     if (firestore) {
-                        const docRef = doc(firestore, "blogs", slugify(title));
-                        console.log(docRef);
+                        const docRef = doc(firestore, "research", slugify(title));
                         await deleteDoc(docRef);
                     } else {
                         console.error("Firestore is undefined.");
@@ -33,20 +30,18 @@ export async function deleteBlog(firestore: Firestore, title: string) {
     
     
 }
-export async function postBlog(firestore: Firestore, title: string, author: string, date: string, image: string, text: HTMLDivElement) {    
+export async function postBlog(firestore: Firestore, title: string, author: string, image: string, abstract: string, link: string, date: string, doi: string) {    
     try {
         if (firestore) {
-            console.log(firestore);
-            console.log('posted');
-            const docRef = doc(firestore, 'blogs', slugify(title));
-            console.log(docRef);
+            const docRef = doc(firestore, 'research', slugify(title));
             await setDoc(docRef, {
                 title: title,
                 author: author,
                 image: image,
-                content: text.outerHTML.replace("contenteditable=\"true\"", "contenteditable=\"false\""),
-                slug: slugify(title),
-                date: Timestamp.fromDate(DateTime.fromISO(date).toJSDate())
+                abstract: abstract,
+                link: link,
+                date: Timestamp.fromDate(DateTime.fromISO(date).toJSDate()),
+                doi: doi
             });
             
         } else {

@@ -1,9 +1,5 @@
 <script lang="ts">
-	import PhotoPicker from '$lib/Form/PhotoPicker.svelte';
-	import AddForm from '$lib/Form/AddForm.svelte';
-	import FormField from '$lib/Form/FormField.svelte';
-
-	import { initializeStores } from '@skeletonlabs/skeleton';
+	import { Modal, initializeStores } from '@skeletonlabs/skeleton';
 	initializeStores();
 
 	import Signin from '../lib/SignIn.svelte';
@@ -14,37 +10,25 @@
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
-
-	//Firebase
 	
-
-	import { FirebaseApp, getFirebaseContext } from 'sveltefire';
-
-
 	// Initialize Firebase
-	
+	import { FirebaseApp } from 'sveltefire';
 	import { SignedIn, SignedOut } from 'sveltefire';
 	import DashBoard from '$lib/DashBoard.svelte';
 	// import { getAnalytics } from "firebase/analytics";
 	// const analytics = getAnalytics(app);
 
-	import { storeExample } from './store';
-	let storeExample_value = 0;
-	storeExample.subscribe((value) => {
-		storeExample_value = value;
-	});
+	
 
 	import { Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
 	const drawerStore = getDrawerStore();
 
-	import { postBlog } from '$lib/blog';
 	import { initializeApp } from 'firebase/app';
 	import { getFirestore } from 'firebase/firestore';
 	import { getAuth } from 'firebase/auth';
+	import { getStorage } from 'firebase/storage';
+	import { getDatabase } from 'firebase/database';
 
-	let title = '';
-	let author = '';
-	let image = '';
 	const firebaseConfig = {
 		apiKey: "AIzaSyAw9-SSj6Pnu1P5pvq6GnukOX_1vC7EdfQ",
 		authDomain: 'scrf-bd.firebaseapp.com',
@@ -61,29 +45,20 @@
 	let storage = getStorage(app);
 	let rtdb = getDatabase(app);
 
-	import TipTap from '$lib/TipTap.svelte';
-	import { getStorage } from 'firebase/storage';
-	import { getDatabase } from 'firebase/database';
-
-	let divElement: HTMLDivElement;
+	import CreateBlog from '$lib/CreateBlog.svelte';
+	import CreateResearch from '$lib/CreateResearch.svelte';
+	import CreateNews from '$lib/CreateNews.svelte';
 </script>
-
 <FirebaseApp {auth} {firestore} {storage} {rtdb}>
+	<Modal />
 	<Drawer position="left">
-		{#if $drawerStore.id === 'create blog'}
-			<form on:submit|preventDefault={() => {postBlog(firestore, title, author, image, divElement); drawerStore.close(); title = ''; author = ''; image='';}} class="p-8 px-16 w-full">
-				<AddForm>
-					<FormField bind:value={title} name="Title" classValue="sm:col-span-3" />
-					<FormField bind:value={author} name="Author" classValue="sm:col-span-4 col-start-1" />
-					<FormField bind:value={image} disabled={true}  name="Image" classValue="sm:col-span-3" />
-					<p class="text-green-600 sm:col-span-6">The link will be added after you upload your image</p>
-					<PhotoPicker bind:title bind:image/>
-					<p class="text-red-600 sm:col-span-6">Only upload photo after providing the final version of your title</p>
-					<fieldset class="sm:col-span-6 ">
-						<TipTap bind:title bind:element={divElement} />
-					</fieldset>
-				</AddForm>
-			</form>
+		<h3 class="h3 block p-8">{$drawerStore.id}</h3>
+		{#if $drawerStore.id === 'Create Blog'}
+			<CreateBlog />
+		{:else if $drawerStore.id === 'Create Research'}
+			<CreateResearch />
+		{:else if $drawerStore.id === 'Create News'}
+			<CreateNews />
 		{/if}
 	</Drawer>
 
@@ -94,9 +69,7 @@
 					<DashBoard {signOut} />
 				</div>
 				<div class="w-full">
-					<slot />
-					<div class="prose text-white" bind:this={divElement} />
-
+					<slot storeExample_value/>
 				</div>
 			</div>
 		</SignedIn>
